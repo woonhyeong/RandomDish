@@ -13,11 +13,23 @@ class DishesViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var dishesAddButton: UIButton!
     
+    let dishesBrain = DishesBrain()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        NotificationCenter.default.addObserver(self, selector: #selector(loadOverlapView), name: Notification.Name("loadOverlapView"), object: nil)
     }
 
-
+    @IBAction func dishesAddButtonTouched(_ sender: UIButton) {
+        guard let text = textField.text, text != "" else {
+            return
+        }
+        dishesBrain.addDish(text)
+        
+    }
+    
+    @objc func loadOverlapView() {
+        
+    }
 }
 

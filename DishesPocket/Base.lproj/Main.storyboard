@@ -22,6 +22,9 @@
                                 <rect key="frame" x="155" y="553" width="65" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="넣어버리기"/>
+                                <connections>
+                                    <action selector="dishesAddButtonTouched:" destination="BYZ-38-t0r" eventType="touchUpInside" id="REW-g1-efp"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AmS-Z2-AlQ">
                                 <rect key="frame" x="139" y="499" width="97" height="30"/>
