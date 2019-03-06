@@ -17,5 +17,15 @@ class DishesBrain {
         } else {
             dishList.append(dish)
         }
+        
+        NotificationCenter.default.post(name: Notification.Name("addDishEnd"), object: self, userInfo: ["number":dishList.count])
+    }
+    
+    func mixDish() -> String? {
+        guard let output = dishList.randomElement() else {
+            NotificationCenter.default.post(name: Notification.Name("emptyList"), object: self)
+            return nil
+        }
+        return output
     }
 }

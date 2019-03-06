@@ -26,19 +26,28 @@
                                     <action selector="dishesAddButtonTouched:" destination="BYZ-38-t0r" eventType="touchUpInside" id="REW-g1-efp"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AmS-Z2-AlQ">
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="음식" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AmS-Z2-AlQ">
                                 <rect key="frame" x="139" y="499" width="97" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EVF-NV-RuR">
+                                <rect key="frame" x="172" y="599" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="섞기"/>
+                                <connections>
+                                    <action selector="mixButtonTouched:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xu1-SI-PT8"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="dishesAddButton" destination="fNJ-ve-yNg" id="FyH-23-Yhm"/>
+                        <outlet property="mixButton" destination="EVF-NV-RuR" id="KSA-AN-mrO"/>
                         <outlet property="textField" destination="AmS-Z2-AlQ" id="agy-np-WcT"/>
                     </connections>
                 </viewController>
