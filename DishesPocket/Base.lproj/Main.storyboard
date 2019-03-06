@@ -72,29 +72,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="sticker" translatesAutoresizingMaskIntoConstraints="NO" id="koH-UC-p6g">
-                                <rect key="frame" x="87" y="233" width="200" height="200"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1hS-zJ-z8Y">
+                                <rect key="frame" x="217" y="244" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7nk-70-4ka">
-                                <rect key="frame" x="166" y="323" width="42" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1hS-zJ-z8Y">
-                                <rect key="frame" x="202" y="172" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="Button" image="magnifier"/>
+                                <connections>
+                                    <segue destination="u2B-cs-teh" kind="presentation" id="RL7-nK-20u"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="GI6-8b-m05"/>
                     </view>
-                    <connections>
-                        <outlet property="memoLabel" destination="7nk-70-4ka" id="fSK-UZ-aR2"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dBt-cj-w4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -114,7 +103,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y7d-hH-5GZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="879" y="743"/>
+            <point key="canvasLocation" x="879" y="823"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="cfY-52-KJ2">
@@ -130,10 +119,10 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTJ-6e-A09" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1711" y="743"/>
+            <point key="canvasLocation" x="1694" y="823"/>
         </scene>
     </scenes>
     <resources>
-        <image name="sticker" width="640" height="618"/>
+        <image name="magnifier" width="640" height="640"/>
     </resources>
 </document>

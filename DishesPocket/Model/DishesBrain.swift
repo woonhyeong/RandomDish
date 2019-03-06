@@ -18,7 +18,7 @@ class DishesBrain {
             dishList.append(dish)
         }
         
-        NotificationCenter.default.post(name: Notification.Name("addDishEnd"), object: self, userInfo: ["number":dishList.count])
+        NotificationCenter.default.post(name: Notification.Name("addDishEnd"), object: self, userInfo: ["count":dishList.count])
     }
     
     func mixDish() -> String? {

@@ -11,6 +11,6 @@ import UIKit
 class ResultViewController : UIViewController {
     
     @IBOutlet weak var memoLabel: UILabel!
-    
+    @IBOutlet weak var memoImage: UIImageView?
     
 }
