@@ -28,4 +28,9 @@ class DishesBrain {
         }
         return output
     }
+    
+    func resetDish() {
+        dishList.removeAll()
+        NotificationCenter.default.post(name: Notification.Name("resetDish"), object: self)
+    }
 }

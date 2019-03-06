@@ -12,6 +12,7 @@ class DishesViewController: UIViewController {
 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var dishesAddButton: UIButton!
+    @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var mixButton: UIButton!
     
     let dishesBrain = DishesBrain()
@@ -21,6 +22,7 @@ class DishesViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(loadOverlapView), name: Notification.Name("loadOverlapView"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(addDishEnd), name:Notification.Name("addDishEnd") , object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadEmptyListView), name: Notification.Name("emptyList"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetDish), name: Notification.Name("resetDish"), object: nil)
     }
 
     // MARK: - IBAction methods
@@ -35,7 +37,17 @@ class DishesViewController: UIViewController {
         let output = dishesBrain.mixDish()
     }
     
+    @IBAction func resetButtonTouched(_ sender: UIButton) {
+        dishesBrain.resetDish()
+    }
+    
     // MARK: - Custom methods
+    func loadResultView() {
+        // 결과 view를 띄운다.
+        
+    }
+    
+    // MARK: - Notification methods
     @objc func loadOverlapView() {
         // 중복된 음식을 알리는 view를 사용자에게 띄운다,
     }
@@ -47,6 +59,10 @@ class DishesViewController: UIViewController {
     
     @objc func loadEmptyListView() {
         // 원소가 없는 view를 load 한다.
+    }
+    
+    @objc func resetDish() {
+        // 음식 개수를 나타내는 label을 0으로 초기화한다.
     }
 }
 
