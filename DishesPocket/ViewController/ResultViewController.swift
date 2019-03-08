@@ -12,11 +12,13 @@ class ResultViewController : UIViewController {
     
     @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var memoImage: UIImageView?
+    @IBOutlet weak var searchButton: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addResultImage()
         addResultText()
+        addSearchButton()
     }
     
     func addResultImage() {
@@ -46,11 +48,12 @@ class ResultViewController : UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         
-        memoImage?.addSubview(label)
-        
         guard let image = memoImage else {
             return
         }
+        image.addSubview(label)
+        label.textAlignment = NSTextAlignment.center
+        label.text = "짜장면"
         
         let centerX : NSLayoutConstraint = label.centerXAnchor.constraint(equalTo: image.centerXAnchor)
         let centerY : NSLayoutConstraint = label.centerYAnchor.constraint(equalTo: image.centerYAnchor)
@@ -63,5 +66,34 @@ class ResultViewController : UIViewController {
         height.isActive = true
         
         memoLabel = label
+    }
+    
+    func addSearchButton() {
+        let button: UIButton = UIButton(type: UIButton.ButtonType.custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        guard let image = memoImage else {
+            return
+        }
+        image.addSubview(button)
+        button.setImage(UIImage(named: "magnifier"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(loadMapViewController), for: UIControl.Event.touchUpInside)
+        
+        let trailing : NSLayoutConstraint = button.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -self.view.frame.width*0.5*0.2)
+        let leading : NSLayoutConstraint = button.topAnchor.constraint(equalTo: image.topAnchor, constant: self.view.frame.width*0.5*0.05)
+        let width : NSLayoutConstraint = button.widthAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.1)
+        let height : NSLayoutConstraint =  button.heightAnchor.constraint(equalTo: button.widthAnchor, multiplier: 1)
+        
+        trailing.isActive = true
+        leading.isActive = true
+        width.isActive = true
+        height.isActive = true
+        
+        searchButton = button
+    }
+    
+    @objc
+    func loadMapViewController() {
+        
     }
 }
