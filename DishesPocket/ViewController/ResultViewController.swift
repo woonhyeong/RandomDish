@@ -10,15 +10,24 @@ import UIKit
 
 class ResultViewController : UIViewController {
     
+    // MARK: - Properties
     @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var memoImage: UIImageView?
-    @IBOutlet weak var searchButton: UIButton?
+    @IBOutlet weak var cancelButton: UIButton?
     
+    // MARK: - Variables
+    var resultText: String?
+    
+    // MARK: - Custom Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         addResultImage()
         addResultText()
-        addSearchButton()
+        addCancelButton()
+        
+        if let text = resultText {
+            memoLabel.text = text
+        }
     }
     
     func addResultImage() {
@@ -51,10 +60,10 @@ class ResultViewController : UIViewController {
         guard let image = memoImage else {
             return
         }
+        
         image.addSubview(label)
         label.textAlignment = NSTextAlignment.center
-        label.text = "짜장면"
-        
+            
         let centerX : NSLayoutConstraint = label.centerXAnchor.constraint(equalTo: image.centerXAnchor)
         let centerY : NSLayoutConstraint = label.centerYAnchor.constraint(equalTo: image.centerYAnchor)
         let width : NSLayoutConstraint = label.widthAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.8)
@@ -68,16 +77,17 @@ class ResultViewController : UIViewController {
         memoLabel = label
     }
     
-    func addSearchButton() {
+    func addCancelButton() {
         let button: UIButton = UIButton(type: UIButton.ButtonType.custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         guard let image = memoImage else {
             return
         }
-        image.addSubview(button)
-        button.setImage(UIImage(named: "magnifier"), for: UIControl.State.normal)
-        button.addTarget(self, action: #selector(loadMapViewController), for: UIControl.Event.touchUpInside)
+        
+        self.view.addSubview(button)
+        button.setImage(UIImage(named: "cancel"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(loadMapViewController(_:)), for: UIControl.Event.touchUpInside)
         
         let trailing : NSLayoutConstraint = button.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -self.view.frame.width*0.5*0.2)
         let leading : NSLayoutConstraint = button.topAnchor.constraint(equalTo: image.topAnchor, constant: self.view.frame.width*0.5*0.05)
@@ -89,11 +99,11 @@ class ResultViewController : UIViewController {
         width.isActive = true
         height.isActive = true
         
-        searchButton = button
+        cancelButton = button
     }
     
-    @objc
-    func loadMapViewController() {
-        
+    
+    @objc func loadMapViewController(_ sender:UIButton) {
+        dismiss(animated: false, completion: nil)
     }
 }

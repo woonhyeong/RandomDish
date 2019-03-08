@@ -34,9 +34,9 @@ class DishesViewController: UIViewController {
     }
     
     @IBAction func mixButtonTouched(_ sender: UIButton) {
-        if let output = dishesBrain.mixDish() {
-            print(output)
-        }
+        // animation 효과를 준 뒤 ResultViewController를 띄운다.
+        
+        performSegue(withIdentifier: "UploadResultViewController", sender: self)
     }
     
     @IBAction func resetButtonTouched(_ sender: UIButton) {
@@ -77,6 +77,18 @@ class DishesViewController: UIViewController {
     
     @objc func resetDish() {
         // 음식 개수를 나타내는 label을 0으로 초기화한다.
+    }
+    
+    // MARK: - Segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "UploadResultViewController" {
+            let secondVC = segue.destination as! ResultViewController
+            
+            guard let output = dishesBrain.mixDish() else {
+                return
+            }
+            secondVC.resultText = output
+        }
     }
 }
 
