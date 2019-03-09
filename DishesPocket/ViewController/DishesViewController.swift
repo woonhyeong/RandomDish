@@ -25,11 +25,6 @@ class DishesViewController: UIViewController {
     }
     
     // MARK: - Custom methods
-    func loadResultView() {
-        // 결과 view를 띄운다.
-        
-    }
-    
     func addProperties() {
         addNotification()
         addImageView()
@@ -63,11 +58,14 @@ class DishesViewController: UIViewController {
     
     @objc func addDishEnd(notification: Notification) {
         textField.text = nil
-        // list 개수를 로드한다.
         guard let notificationUserInfo = notification.userInfo as? [String: Int],
             let dishCount = notificationUserInfo["count"] else { return }
         
         countLabel.text = String(dishCount)
+        
+        if !mixButton.isEnabled {
+            mixButton.isEnabled = true
+        }
     }
     
     @objc func loadEmptyListView() {
@@ -75,7 +73,6 @@ class DishesViewController: UIViewController {
     }
     
     @objc func resetDish() {
-        // 음식 개수를 나타내는 label을 0으로 초기화한다.
         countLabel.text = String(0)
     }
     
@@ -102,6 +99,7 @@ class DishesViewController: UIViewController {
     
     @IBAction func resetButtonTouched(_ sender: UIButton) {
         dishesBrain.resetDish()
+        mixButton.isEnabled = false
     }
     
     // MARK: - UI
@@ -156,6 +154,7 @@ class DishesViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setAttributedTitle(NSAttributedString(string: "섞기"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(mixButtonTouched(_:)), for: UIControl.Event.touchUpInside)
+        button.isEnabled = false
         self.view.addSubview(button)
         
         button.topAnchor.constraint(equalTo: dishesAddButton.bottomAnchor, constant: self.view.frame.height*0.025).isActive = true

@@ -60,10 +60,10 @@ class ResultViewController : UIViewController {
         label.titleLabel?.numberOfLines = 3
         label.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         
-        label.centerXAnchor.constraint(equalTo: image.centerXAnchor)
-        label.centerYAnchor.constraint(equalTo: image.centerYAnchor)
-        label.widthAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.7)
-        label.heightAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.1)
+        label.centerXAnchor.constraint(equalTo: image.centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: image.centerYAnchor).isActive = true
+        label.widthAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.7).isActive = true
+        label.heightAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.1).isActive = true
         
         memoLabel = label
     }
@@ -80,10 +80,10 @@ class ResultViewController : UIViewController {
         button.setImage(UIImage(named: "cancel"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(dismissResultViewController(_:)), for: UIControl.Event.touchUpInside)
         
-        button.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -self.view.frame.width*0.5*0.2)
-        button.topAnchor.constraint(equalTo: image.topAnchor, constant: self.view.frame.width*0.5*0.05)
-        button.widthAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.1)
-        button.heightAnchor.constraint(equalTo: button.widthAnchor, multiplier: 1)
+        button.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -self.view.frame.width*0.5*0.2).isActive = true
+        button.topAnchor.constraint(equalTo: image.topAnchor, constant: self.view.frame.width*0.5*0.05).isActive = true
+        button.widthAnchor.constraint(equalTo: image.widthAnchor, multiplier: 0.1).isActive = true
+        button.heightAnchor.constraint(equalTo: button.widthAnchor, multiplier: 1).isActive = true
         
         cancelButton = button
     }
