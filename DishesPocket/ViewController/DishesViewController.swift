@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DishesViewController: UIViewController {
+class DishesViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var pocketImage: UIImageView!
     @IBOutlet weak var textField: UITextField!
@@ -18,15 +18,28 @@ class DishesViewController: UIViewController {
     @IBOutlet weak var countLabel: UILabel!
     
     let dishesBrain = DishesBrain()
+    var isKeyBoardShown = false
     
+    
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         addProperties()
+        textField.delegate = self
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        addNotification()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        removeNotification()
     }
     
     // MARK: - Custom methods
     func addProperties() {
-        addNotification()
         addImageView()
         addTextField()
         addDishesAddButton()
@@ -35,12 +48,27 @@ class DishesViewController: UIViewController {
     }
     
     func addNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(loadOverlapView(notification:)), name: Notification.Name("loadOverlapView"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(addDishEnd(notification:)), name:Notification.Name("addDishEnd") , object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(loadEmptyListView), name: Notification.Name("emptyList"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(resetDish), name: Notification.Name("resetDish"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadOverlapView(notification:)), name: .loadOverlapView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(addDishEnd(notification:)), name: .addDishEnd, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadEmptyListView), name: .emptyList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetDish), name: .resetDish, object: nil)
     }
     
+    func removeNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("loadOverlapView"), object: nil)
+        NotificationCenter.default.removeObserver(self, name:Notification.Name("addDishEnd") , object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("emptyList"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("resetDish"), object: nil)
+    }
+    
+    @objc func dismissKeyboard() {
+        textField.resignFirstResponder()
+        isKeyBoardShown = false
+    }
     
     // MARK: - Notification methods
     @objc func loadOverlapView(notification: Notification) {
@@ -76,6 +104,49 @@ class DishesViewController: UIViewController {
         countLabel.text = String(0)
     }
     
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            print("Notification: keyboard will show")
+            
+            if keyboardSize.height == 0.0 || isKeyBoardShown == true {
+                return
+            }
+            
+            UIView.animate(withDuration: 0.33, animations: { () -> Void in
+                if self.view.frame.origin.y == 0 {
+                    self.view.frame.origin.y -= keyboardSize.height
+                }
+            }, completion:{ condition in
+                if condition { self.isKeyBoardShown = true
+                    self.dishesAddButton.isEnabled = false
+                    self.mixButton.isEnabled = false
+                }
+            })
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            print("Notification keyboard will hide")
+            if !isKeyBoardShown {
+                return
+            }
+            
+            UIView.animate(withDuration: 0.33, animations: { () -> Void in
+                if self.view.frame.origin.y != 0 {
+                    self.view.frame.origin.y += keyboardSize.height
+                }
+            }, completion:{ condition in
+                if condition { self.isKeyBoardShown = false
+                    self.dishesAddButton.isEnabled = true
+                    if self.countLabel.text != "0" {
+                        self.mixButton.isEnabled = true
+                    }
+                }
+            })
+        }
+    }
+    
     // MARK: - IBAction methods
     @IBAction func dishesAddButtonTouched(_ sender: UIButton) {
         guard let text = textField.text, text != "" else {
@@ -102,6 +173,12 @@ class DishesViewController: UIViewController {
         mixButton.isEnabled = false
     }
     
+    // MARK: - Overriding method
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
+    
     // MARK: - UI
     func addImageView() {
         let image:UIImageView = UIImageView(image: UIImage(named: "pocket"))
@@ -113,7 +190,7 @@ class DishesViewController: UIViewController {
         image.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -self.view.frame.height*0.1).isActive = true
         image.widthAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.4).isActive = true
         image.heightAnchor.constraint(equalTo: image.widthAnchor, multiplier: 1).isActive = true
-       
+        
         pocketImage = image
     }
     
@@ -145,7 +222,7 @@ class DishesViewController: UIViewController {
         button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -self.view.frame.width*0.3).isActive = true
         button.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: self.view.frame.width*0.3).isActive = true
         button.heightAnchor.constraint(equalTo: textField.heightAnchor, multiplier: 1).isActive = true
-    
+        
         dishesAddButton = button
     }
     
@@ -194,3 +271,9 @@ class DishesViewController: UIViewController {
     }
 }
 
+extension Notification.Name {
+    static let loadOverlapView = Notification.Name("loadOverlapView")
+    static let addDishEnd = Notification.Name("addDishEnd")
+    static let emptyList = Notification.Name("emptyList")
+    static let resetDish = Notification.Name("resetDish")
+}
