@@ -45,6 +45,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
         addDishesAddButton()
         addMixButton()
         addResetButton()
+        self.view.layoutIfNeeded()
     }
     
     func addNotification() {
@@ -86,10 +87,11 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
     
     @objc func addDishEnd(notification: Notification) {
         textField.text = nil
-        guard let notificationUserInfo = notification.userInfo as? [String: Int],
-            let dishCount = notificationUserInfo["count"] else { return }
+        guard let notificationUserInfo = notification.userInfo as? [String: String],
+            let dish = notificationUserInfo["dish"] ,let dishCount = notificationUserInfo["count"] else { return }
         
-        countLabel.text = String(dishCount)
+        countLabel.text = dishCount
+        addDishesAnimate(dish)
         
         if !mixButton.isEnabled {
             mixButton.isEnabled = true
@@ -197,6 +199,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
     func addTextField() {
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
+        text.autocorrectionType = .no
         text.placeholder = "음식"
         text.textAlignment = NSTextAlignment.center
         text.layer.borderWidth = 1.0
@@ -216,6 +219,10 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setAttributedTitle(NSAttributedString(string: "넣어버리기"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(dishesAddButtonTouched(_:)), for: UIControl.Event.touchUpInside)
+        button.layer.cornerRadius = 5
+        button.layer.backgroundColor = UIColor.init(red: 70/256, green: 198/256, blue: 253/256, alpha: 1).cgColor
+        button.titleLabel?.textColor = UIColor.white
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.heavy)
         self.view.addSubview(button)
         
         button.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: self.view.frame.height*0.025).isActive = true
@@ -232,6 +239,10 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
         button.setAttributedTitle(NSAttributedString(string: "섞기"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(mixButtonTouched(_:)), for: UIControl.Event.touchUpInside)
         button.isEnabled = false
+        button.layer.cornerRadius = 5
+        button.layer.backgroundColor = UIColor.init(red: 232/256, green: 137/256, blue: 188/256, alpha: 1).cgColor
+        button.titleLabel?.textColor = UIColor.white
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.heavy)
         self.view.addSubview(button)
         
         button.topAnchor.constraint(equalTo: dishesAddButton.bottomAnchor, constant: self.view.frame.height*0.025).isActive = true
@@ -251,6 +262,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         label.text = "0"
         label.textAlignment = NSTextAlignment.right
+        label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
         button.setImage(UIImage(named: "refresh"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(resetButtonTouched(_:)), for: UIControl.Event.touchUpInside)
         self.view.addSubview(button)
@@ -268,6 +280,47 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
         
         resetButton = button
         countLabel = label
+    }
+    
+    // MARK: - Animation Effect
+    func addDishesAnimate(_ dish:String) {
+        var label:UILabel? = UILabel()
+        label!.translatesAutoresizingMaskIntoConstraints = false
+        label!.text = dish
+        label!.textAlignment = .center
+        label!.layer.backgroundColor = UIColor.white.cgColor
+        label!.layer.borderWidth = 1
+        label!.layer.borderColor = UIColor.orange.cgColor
+        label!.layer.cornerRadius = 5
+        self.view.addSubview(label!)
+        
+        let top = label!.topAnchor.constraint(equalTo: textField.topAnchor)
+        let leading = label!.leadingAnchor.constraint(equalTo: textField.leadingAnchor)
+        let trailing = label!.trailingAnchor.constraint(equalTo: textField.trailingAnchor)
+        let height = label!.heightAnchor.constraint(equalTo: textField.heightAnchor)
+        let center = label!.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+
+        height.isActive = true
+        top.isActive = true
+        leading.isActive = true
+        trailing.isActive = true
+        center.isActive = true
+        self.view.layoutIfNeeded()
+        
+        UILabel.animate(withDuration: 1, animations: {
+            label!.transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
+            label!.frame.origin.y -= (label!.frame.origin.y-self.view.frame.height*0.1)
+        }){
+            finished in
+            UILabel.animate(withDuration: 0.6, animations: {
+                label!.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+                label!.frame.origin.y += (self.view.frame.height*0.3)
+            }){
+                finished in
+                label!.removeFromSuperview()
+                label = nil
+            }
+        }
     }
 }
 

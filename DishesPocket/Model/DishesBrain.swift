@@ -16,9 +16,8 @@ class DishesBrain {
             NotificationCenter.default.post(name: Notification.Name("loadOverlapView"), object: self, userInfo: ["dish":dish])
         } else {
             dishList.append(dish)
+            NotificationCenter.default.post(name: Notification.Name("addDishEnd"), object: self, userInfo: ["count":"\(dishList.count)", "dish":dish])
         }
-        
-        NotificationCenter.default.post(name: Notification.Name("addDishEnd"), object: self, userInfo: ["count":dishList.count])
     }
     
     func mixDish() -> String? {
