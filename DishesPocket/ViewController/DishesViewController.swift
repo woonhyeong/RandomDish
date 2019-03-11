@@ -312,6 +312,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
             label!.frame.origin.y -= (label!.frame.origin.y-self.view.frame.height*0.1)
         }){
             finished in
+            self.pocketImage.layer.zPosition = 1
             UILabel.animate(withDuration: 0.6, animations: {
                 label!.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
                 label!.frame.origin.y += (self.view.frame.height*0.3)
@@ -319,6 +320,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
                 finished in
                 label!.removeFromSuperview()
                 label = nil
+                self.pocketImage.layer.zPosition = 0
             }
         }
     }
