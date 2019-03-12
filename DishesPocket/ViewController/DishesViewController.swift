@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import AVFoundation
 
-class DishesViewController: UIViewController, UITextFieldDelegate {
+class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayerDelegate {
     
     @IBOutlet weak var pocketImage: UIImageView!
     @IBOutlet weak var textField: UITextField!
@@ -18,13 +19,15 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var countLabel: UILabel!
     
     let dishesBrain = DishesBrain()
-    var isKeyBoardShown = false
-    
+    var isKeyBoardShown : Bool = false
+    var addButtonPlayer : AVAudioPlayer!
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         addProperties()
+        addAssetsSound()
+        
         textField.delegate = self
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
@@ -307,13 +310,14 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
         center.isActive = true
         self.view.layoutIfNeeded()
         
-        UILabel.animate(withDuration: 1, animations: {
+        UILabel.animate(withDuration: 0.6, animations: {
             label!.transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
             label!.frame.origin.y -= (label!.frame.origin.y-self.view.frame.height*0.1)
+            self.addButtonPlayer.play()
         }){
             finished in
             self.pocketImage.layer.zPosition = 1
-            UILabel.animate(withDuration: 0.6, animations: {
+            UILabel.animate(withDuration: 0.35, animations: {
                 label!.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
                 label!.frame.origin.y += (self.view.frame.height*0.3)
             }){
@@ -322,6 +326,22 @@ class DishesViewController: UIViewController, UITextFieldDelegate {
                 label = nil
                 self.pocketImage.layer.zPosition = 0
             }
+        }
+    }
+    
+    // MARK: - Sound effect
+    func addAssetsSound() {
+        guard let soundAsset:NSDataAsset = NSDataAsset(name: "jump01") else {
+            print("음원 파일을 찾을 수 없습니다.")
+            return
+        }
+        
+        do {
+            try self.addButtonPlayer = AVAudioPlayer(data: soundAsset.data)
+            self.addButtonPlayer.delegate = self
+        } catch let error as NSError {
+            print("플레이어 초기화 실패")
+            print("코드 : \(error.code), 메세지 : \(error.localizedDescription)")
         }
     }
 }
