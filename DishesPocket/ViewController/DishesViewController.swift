@@ -291,10 +291,10 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         label!.translatesAutoresizingMaskIntoConstraints = false
         label!.text = dish
         label!.textAlignment = .center
-        label!.layer.backgroundColor = UIColor.white.cgColor
-        label!.layer.borderWidth = 1
-        label!.layer.borderColor = UIColor.orange.cgColor
+        label!.layer.backgroundColor = UIColor.orange.cgColor
         label!.layer.cornerRadius = 5
+        label!.textColor = UIColor.black
+        label!.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.heavy)
         self.view.addSubview(label!)
         
         let top = label!.topAnchor.constraint(equalTo: textField.topAnchor)
@@ -310,7 +310,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         center.isActive = true
         self.view.layoutIfNeeded()
         
-        UILabel.animate(withDuration: 0.6, animations: {
+        UILabel.animate(withDuration: 0.5, animations: {
             label!.transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
             label!.frame.origin.y -= (label!.frame.origin.y-self.view.frame.height*0.1)
             self.addButtonPlayer.play()
@@ -331,7 +331,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     
     // MARK: - Sound effect
     func addAssetsSound() {
-        guard let soundAsset:NSDataAsset = NSDataAsset(name: "jump01") else {
+        guard let soundAsset:NSDataAsset = NSDataAsset(name: "jump01-Sound") else {
             print("음원 파일을 찾을 수 없습니다.")
             return
         }

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import SpriteKit
+import GameplayKit
 
 class ResultViewController : UIViewController {
     
@@ -14,26 +16,40 @@ class ResultViewController : UIViewController {
     @IBOutlet weak var memoLabel: UIButton!
     @IBOutlet weak var memoImage: UIImageView?
     @IBOutlet weak var cancelButton: UIButton?
-    
+    @IBOutlet weak var cloudImageView: UIImageView?
     // MARK: - Variables
     var resultText: String?
     
-    // MARK: - Custom Methods
+    // MARK: - Lift Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         addResultImage()
-        addResultText()
         addCancelButton()
-        
+        addResultText()
+        loadResultAnimate()
         if let text = resultText {
             memoLabel.setAttributedTitle(NSAttributedString(string: text), for: UIControl.State.normal)
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIView.animate(withDuration: 1.5, animations: {
+            self.memoImage!.alpha = 1.0
+            self.cloudImageView!.alpha = 0
+        }) {
+            _ in
+            self.cloudImageView!.layer.zPosition = -1
+        }
+    }
+    
+    // MARK: - Custom Methods
     func addResultImage() {
         let image: UIImageView = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        
+        image.isUserInteractionEnabled = true
+        image.alpha = 0
         self.view.addSubview(image)
         if let memoImage = UIImage(named: "sticker") {
             image.image = memoImage
@@ -55,7 +71,7 @@ class ResultViewController : UIViewController {
             return
         }
         
-        self.view.addSubview(label)
+        self.memoImage!.addSubview(label)
         label.addTarget(self, action: #selector(loadMapViewController(_:)), for: UIControl.Event.touchUpInside)
         label.titleLabel?.numberOfLines = 3
         label.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
@@ -76,7 +92,7 @@ class ResultViewController : UIViewController {
             return
         }
         
-        self.view.addSubview(button)
+        self.memoImage!.addSubview(button)
         button.setImage(UIImage(named: "cancel"), for: UIControl.State.normal)
         button.addTarget(self, action: #selector(dismissResultViewController(_:)), for: UIControl.Event.touchUpInside)
         
@@ -88,12 +104,28 @@ class ResultViewController : UIViewController {
         cancelButton = button
     }
     
-    
-    @objc func dismissResultViewController(_ sender:UIButton) {
+    // MARK: - IBAction methods
+    @IBAction func dismissResultViewController(_ sender:UIButton) {
         dismiss(animated: false, completion: nil)
     }
     
     @objc func loadMapViewController(_ sender:UIButton) {
         print("Button Touched!")
+    }
+    
+    // MARK: - Animation
+    func loadResultAnimate() {
+        let cloudImage = UIImageView()
+        cloudImage.image = UIImage(named: "cloud")
+        cloudImage.translatesAutoresizingMaskIntoConstraints = false
+
+        self.view.addSubview(cloudImage)
+        cloudImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        cloudImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        cloudImage.widthAnchor.constraint(equalTo: memoImage!.widthAnchor, multiplier: 1.5).isActive = true
+        cloudImage.heightAnchor.constraint(equalTo: cloudImage.widthAnchor, multiplier: 1).isActive = true
+        cloudImage.layer.zPosition = 1
+        
+        cloudImageView = cloudImage
     }
 }
