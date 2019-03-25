@@ -27,7 +27,6 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         super.viewDidLoad()
         addProperties()
         addAssetsSound()
-        
         textField.delegate = self
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
@@ -35,6 +34,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     
     override func viewWillAppear(_ animated: Bool) {
         addNotification()
+        permission()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -205,8 +205,9 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         text.autocorrectionType = .no
         text.placeholder = "음식"
         text.textAlignment = NSTextAlignment.center
-        text.layer.borderWidth = 1.0
-        text.layer.borderColor = UIColor.black.cgColor
+        text.layer.borderWidth = 2
+        text.layer.cornerRadius = 5
+        text.layer.borderColor = UIColor.orange.cgColor
         self.view.addSubview(text)
         
         text.topAnchor.constraint(equalTo: pocketImage.bottomAnchor, constant: self.view.frame.height*0.1).isActive = true
@@ -291,7 +292,8 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         label!.translatesAutoresizingMaskIntoConstraints = false
         label!.text = dish
         label!.textAlignment = .center
-        label!.layer.backgroundColor = UIColor.orange.cgColor
+        label!.layer.borderWidth = 2
+        label!.layer.borderColor = UIColor.orange.cgColor
         label!.layer.cornerRadius = 5
         label!.textColor = UIColor.black
         label!.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.heavy)
@@ -343,6 +345,37 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
             print("플레이어 초기화 실패")
             print("코드 : \(error.code), 메세지 : \(error.localizedDescription)")
         }
+    }
+    
+    func permission() -> Bool {
+        var isGranted = true
+        
+        switch AVAudioSession.sharedInstance().recordPermission {
+        case AVAudioSession.RecordPermission.granted:
+            print("Permission granted")
+            return true
+        case AVAudioSession.RecordPermission.denied:
+            print("Permission denied")
+            AVAudioSession.sharedInstance().requestRecordPermission({
+                (granted) in
+                if granted {
+                    isGranted = true
+                } else {
+                    isGranted = false
+                }
+            })
+        case AVAudioSession.RecordPermission.undetermined:
+            print("Request permission here")
+            AVAudioSession.sharedInstance().requestRecordPermission({
+                (granted) in
+                if granted {
+                    isGranted = true
+                } else {
+                    isGranted = false
+                }
+            })
+        }
+        return isGranted
     }
 }
 
