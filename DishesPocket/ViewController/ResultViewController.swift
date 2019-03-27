@@ -9,42 +9,63 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import AVFoundation
 
-class ResultViewController : UIViewController {
+class ResultViewController : UIViewController, AVAudioPlayerDelegate{
     
     // MARK: - Properties
     @IBOutlet weak var memoLabel: UIButton!
     @IBOutlet weak var memoImage: UIImageView?
     @IBOutlet weak var cancelButton: UIButton?
-    @IBOutlet weak var cloudImageView: UIImageView?
+    //@IBOutlet weak var cloudImageView: UIImageView?
+    @IBOutlet weak var pocketImageView: UIImageView?
+    
     // MARK: - Variables
     var resultText: String?
+    var magicSoundPlayer : AVAudioPlayer!
     
     // MARK: - Lift Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        addPocketImage()
         addResultImage()
         addCancelButton()
         addResultText()
-        loadResultAnimate()
+        //addCloudImage()
         if let text = resultText {
             memoLabel.setAttributedTitle(NSAttributedString(string: text), for: UIControl.State.normal)
         }
+        self.view.layoutIfNeeded()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: 1.5, animations: {
-            self.memoImage!.alpha = 1.0
-            self.cloudImageView!.alpha = 0
+        UIImageView.animate(withDuration: 1.0, animations: {
+            self.pocketImageView?.frame.origin.y += (self.memoImage!.center.y - self.pocketImageView!.center.y)
         }) {
-            _ in
-            self.cloudImageView!.layer.zPosition = -1
+            finished in
+            self.shake(duration: 1)
         }
     }
     
     // MARK: - Custom Methods
+    func addPocketImage() {
+        let image: UIImageView = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(image)
+        if let pocket = UIImage(named: "pocket") {
+            image.image = pocket
+        }
+        
+        image.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        image.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -self.view.frame.height*0.1).isActive = true
+        image.widthAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.4).isActive = true
+        image.heightAnchor.constraint(equalTo: image.widthAnchor, multiplier: 1).isActive = true
+        
+        pocketImageView = image;
+    }
+    
     func addResultImage() {
         let image: UIImageView = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -66,7 +87,7 @@ class ResultViewController : UIViewController {
     func addResultText() {
         let label: UIButton = UIButton(type: UIButton.ButtonType.custom)
         label.translatesAutoresizingMaskIntoConstraints = false
-    
+        
         guard let image = memoImage else {
             return
         }
@@ -104,6 +125,22 @@ class ResultViewController : UIViewController {
         cancelButton = button
     }
     
+//    func addCloudImage() {
+//        let cloudImage = UIImageView()
+//        cloudImage.image = UIImage(named: "cloud")
+//        cloudImage.translatesAutoresizingMaskIntoConstraints = false
+//        cloudImage.alpha = 0
+//
+//        self.view.addSubview(cloudImage)
+//        cloudImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+//        cloudImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+//        cloudImage.widthAnchor.constraint(equalTo: memoImage!.widthAnchor, multiplier: 2.0).isActive = true
+//        cloudImage.heightAnchor.constraint(equalTo: cloudImage.widthAnchor, multiplier: 1).isActive = true
+//        cloudImage.layer.zPosition = 1
+//
+//        cloudImageView = cloudImage
+//    }
+    
     // MARK: - IBAction methods
     @IBAction func dismissResultViewController(_ sender:UIButton) {
         dismiss(animated: false, completion: nil)
@@ -114,18 +151,53 @@ class ResultViewController : UIViewController {
     }
     
     // MARK: - Animation
-    func loadResultAnimate() {
-        let cloudImage = UIImageView()
-        cloudImage.image = UIImage(named: "cloud")
-        cloudImage.translatesAutoresizingMaskIntoConstraints = false
-
-        self.view.addSubview(cloudImage)
-        cloudImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        cloudImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        cloudImage.widthAnchor.constraint(equalTo: memoImage!.widthAnchor, multiplier: 1.5).isActive = true
-        cloudImage.heightAnchor.constraint(equalTo: cloudImage.widthAnchor, multiplier: 1).isActive = true
-        cloudImage.layer.zPosition = 1
+    func shake(duration: CFTimeInterval) {
+        CATransaction.begin()
         
-        cloudImageView = cloudImage
+        let translation = CAKeyframeAnimation(keyPath: "transform.translation.x");
+        translation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        translation.values = [-5, 5, -5, 5, -3, 3, -2, 2, 0]
+        
+        let rotation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
+        rotation.values = [-5, 5, -5, 5, -3, 3, -2, 2, 0].map {
+            ( degrees: Double) -> Double in
+            let radians: Double = (.pi * degrees) / 180.0
+            return radians
+        }
+        
+        let shakeGroup: CAAnimationGroup = CAAnimationGroup()
+        shakeGroup.animations = [translation, rotation]
+        shakeGroup.duration = duration
+        
+        CATransaction.setCompletionBlock({
+            self.pocketImageView?.isHidden = true
+//            self.cloudImageView?.alpha = 1.0
+            self.magicSoundPlayer.play()
+            UIView.animate(withDuration: 2.0, animations: {
+                self.memoImage!.alpha = 1.0
+//                self.cloudImageView!.alpha = 0
+            }) {
+                _ in
+//                self.cloudImageView?.isHidden = true
+            }
+        })
+        self.pocketImageView?.layer.add(shakeGroup, forKey: "shakeIt")
+        
+        CATransaction.commit()
+    }
+    
+    func addAssetsSound() {
+        guard let soundAsset:NSDataAsset = NSDataAsset(name: "magic-Sound") else {
+            print("음원 파일을 찾을 수 없습니다.")
+            return
+        }
+        
+        do {
+            try self.magicSoundPlayer = AVAudioPlayer(data: soundAsset.data)
+            self.magicSoundPlayer.delegate = self
+        } catch let error as NSError {
+            print("플레이어 초기화 실패")
+            print("코드 : \(error.code), 메세지 : \(error.localizedDescription)")
+        }
     }
 }

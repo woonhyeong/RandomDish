@@ -14,7 +14,6 @@
 		95B2B424222EA6AF00E8FD2B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95B2B422222EA6AF00E8FD2B /* LaunchScreen.storyboard */; };
 		95B2B42C222EABD600E8FD2B /* DishesBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B2B42B222EABD600E8FD2B /* DishesBrain.swift */; };
 		95C9A642222F9FB400735407 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C9A641222F9FB400735407 /* ResultViewController.swift */; };
-		95C9A644222FA0F100735407 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C9A643222FA0F100735407 /* MapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 		95B2B425222EA6AF00E8FD2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		95B2B42B222EABD600E8FD2B /* DishesBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishesBrain.swift; sourceTree = "<group>"; };
 		95C9A641222F9FB400735407 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
-		95C9A643222FA0F100735407 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +74,6 @@
 			children = (
 				95B2B41B222EA6AE00E8FD2B /* DishesViewController.swift */,
 				95C9A641222F9FB400735407 /* ResultViewController.swift */,
-				95C9A643222FA0F100735407 /* MapViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -163,7 +160,6 @@
 				95B2B42C222EABD600E8FD2B /* DishesBrain.swift in Sources */,
 				95B2B41C222EA6AE00E8FD2B /* DishesViewController.swift in Sources */,
 				95B2B41A222EA6AE00E8FD2B /* AppDelegate.swift in Sources */,
-				95C9A644222FA0F100735407 /* MapViewController.swift in Sources */,
 				95C9A642222F9FB400735407 /* ResultViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

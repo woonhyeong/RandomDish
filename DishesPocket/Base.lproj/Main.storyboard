@@ -40,21 +40,5 @@
             </objects>
             <point key="canvasLocation" x="764" y="27"/>
         </scene>
-        <!--Map View Controller-->
-        <scene sceneID="cfY-52-KJ2">
-            <objects>
-                <viewController id="Mpf-Id-aD6" customClass="MapViewController" customModule="DishesPocket" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Mjg-8e-xQd">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="qVi-n2-HEb"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="sRl-ya-nMy"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hTJ-6e-A09" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1492" y="27"/>
-        </scene>
     </scenes>
 </document>

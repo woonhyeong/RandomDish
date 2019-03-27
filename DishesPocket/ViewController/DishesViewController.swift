@@ -25,8 +25,13 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         addProperties()
         addAssetsSound()
+        
+        var isPermitted = permission()
+        while isPermitted == false { isPermitted = permission()}
+        
         textField.delegate = self
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
@@ -34,7 +39,6 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     
     override func viewWillAppear(_ animated: Bool) {
         addNotification()
-        permission()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
