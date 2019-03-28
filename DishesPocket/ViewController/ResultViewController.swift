@@ -31,6 +31,7 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
         addResultImage()
         addCancelButton()
         addResultText()
+        addAssetsSound()
         //addCloudImage()
         if let text = resultText {
             memoLabel.setAttributedTitle(NSAttributedString(string: text), for: UIControl.State.normal)
@@ -187,7 +188,7 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
     }
     
     func addAssetsSound() {
-        guard let soundAsset:NSDataAsset = NSDataAsset(name: "magic-Sound") else {
+        guard let soundAsset:NSDataAsset = NSDataAsset(name: "bbororong-Sound") else {
             print("음원 파일을 찾을 수 없습니다.")
             return
         }
