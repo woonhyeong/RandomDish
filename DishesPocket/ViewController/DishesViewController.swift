@@ -28,7 +28,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         
         addProperties()
         addAssetsSound()
-        
+
         var isPermitted = permission()
         while isPermitted == false { isPermitted = permission()}
         
@@ -60,7 +60,6 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadOverlapView(notification:)), name: .loadOverlapView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(addDishEnd(notification:)), name: .addDishEnd, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(loadEmptyListView), name: .emptyList, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(resetDish), name: .resetDish, object: nil)
     }
     
@@ -69,7 +68,6 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("loadOverlapView"), object: nil)
         NotificationCenter.default.removeObserver(self, name:Notification.Name("addDishEnd") , object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("emptyList"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("resetDish"), object: nil)
     }
     
@@ -104,11 +102,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
             mixButton.isEnabled = true
         }
     }
-    
-    @objc func loadEmptyListView() {
-        // 원소가 없는 view를 load 한다.
-    }
-    
+ 
     @objc func resetDish() {
         countLabel.text = String(0)
     }
@@ -192,7 +186,6 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     func addImageView() {
         let image:UIImageView = UIImageView(image: UIImage(named: "pocket"))
         image.translatesAutoresizingMaskIntoConstraints = false
-        
         self.view.addSubview(image)
         
         image.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
@@ -292,29 +285,15 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     
     // MARK: - Animation Effect
     func addDishesAnimate(_ dish:String) {
-        var label:UILabel? = UILabel()
-        label!.translatesAutoresizingMaskIntoConstraints = false
+        var label:UILabel? = UILabel(frame: CGRect(x: textField.frame.origin.x, y: textField.frame.origin.y, width: textField.frame.width, height: textField.frame.height))
         label!.text = dish
         label!.textAlignment = .center
         label!.layer.borderWidth = 2
         label!.layer.borderColor = UIColor.orange.cgColor
         label!.layer.cornerRadius = 5
         label!.textColor = UIColor.black
-        label!.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.heavy)
+//        label!.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.heavy)
         self.view.addSubview(label!)
-        
-        let top = label!.topAnchor.constraint(equalTo: textField.topAnchor)
-        let leading = label!.leadingAnchor.constraint(equalTo: textField.leadingAnchor)
-        let trailing = label!.trailingAnchor.constraint(equalTo: textField.trailingAnchor)
-        let height = label!.heightAnchor.constraint(equalTo: textField.heightAnchor)
-        let center = label!.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-
-        height.isActive = true
-        top.isActive = true
-        leading.isActive = true
-        trailing.isActive = true
-        center.isActive = true
-        self.view.layoutIfNeeded()
         
         UILabel.animate(withDuration: 0.5, animations: {
             label!.transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
@@ -325,9 +304,10 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
             self.pocketImage.layer.zPosition = 1
             UILabel.animate(withDuration: 0.35, animations: {
                 label!.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
-                label!.frame.origin.y += (self.view.frame.height*0.3)
+                label!.frame.origin.y += (self.pocketImage.frame.origin.y-self.view.frame.height*0.08)
             }){
                 finished in
+                self.pocketImage.shake()
                 label!.removeFromSuperview()
                 label = nil
                 self.pocketImage.layer.zPosition = 0
@@ -383,6 +363,17 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     }
 }
 
+extension UIImageView {
+    func shake() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.05
+        animation.repeatCount = 5
+        animation.autoreverses = true
+        animation.fromValue = CGPoint(x: self.center.x - 4, y: self.center.y)
+        animation.toValue = CGPoint(x: self.center.x + 4, y: self.center.y)
+        self.layer.add(animation, forKey: "position")
+    }
+}
 extension Notification.Name {
     static let loadOverlapView = Notification.Name("loadOverlapView")
     static let addDishEnd = Notification.Name("addDishEnd")

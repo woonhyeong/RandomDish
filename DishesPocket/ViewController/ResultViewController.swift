@@ -23,20 +23,12 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
     // MARK: - Variables
     var resultText: String?
     var magicSoundPlayer : AVAudioPlayer!
+    var shakeSoundPlayer : AVAudioPlayer!
     
     // MARK: - Lift Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        addPocketImage()
-        addResultImage()
-        addCancelButton()
-        addResultText()
-        addAssetsSound()
-        //addCloudImage()
-        if let text = resultText {
-            memoLabel.setAttributedTitle(NSAttributedString(string: text), for: UIControl.State.normal)
-        }
-        self.view.layoutIfNeeded()
+        addProperties()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -46,11 +38,25 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
             self.pocketImageView?.frame.origin.y += (self.memoImage!.center.y - self.pocketImageView!.center.y)
         }) {
             finished in
+            self.shakeSoundPlayer.play()
             self.shake(duration: 1)
         }
     }
     
     // MARK: - Custom Methods
+    func addProperties() {
+        addPocketImage()
+        addResultImage()
+        addCancelButton()
+        addResultText()
+        addMagicSound()
+        addShakeSound()
+        if let text = resultText {
+            memoLabel.setAttributedTitle(NSAttributedString(string: text), for: UIControl.State.normal)
+        }
+        self.view.layoutIfNeeded()
+    }
+    
     func addPocketImage() {
         let image: UIImageView = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +100,6 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
         }
         
         self.memoImage!.addSubview(label)
-        label.addTarget(self, action: #selector(loadMapViewController(_:)), for: UIControl.Event.touchUpInside)
         label.titleLabel?.numberOfLines = 3
         label.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         
@@ -126,29 +131,40 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
         cancelButton = button
     }
     
-//    func addCloudImage() {
-//        let cloudImage = UIImageView()
-//        cloudImage.image = UIImage(named: "cloud")
-//        cloudImage.translatesAutoresizingMaskIntoConstraints = false
-//        cloudImage.alpha = 0
-//
-//        self.view.addSubview(cloudImage)
-//        cloudImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-//        cloudImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-//        cloudImage.widthAnchor.constraint(equalTo: memoImage!.widthAnchor, multiplier: 2.0).isActive = true
-//        cloudImage.heightAnchor.constraint(equalTo: cloudImage.widthAnchor, multiplier: 1).isActive = true
-//        cloudImage.layer.zPosition = 1
-//
-//        cloudImageView = cloudImage
-//    }
+    func addMagicSound() {
+        guard let soundAsset:NSDataAsset = NSDataAsset(name: "bbororong-Sound") else {
+            print("음원 파일을 찾을 수 없습니다.")
+            return
+        }
+        
+        do {
+            try self.magicSoundPlayer = AVAudioPlayer(data: soundAsset.data)
+            self.magicSoundPlayer.delegate = self
+        } catch let error as NSError {
+            print("플레이어 초기화 실패")
+            print("코드 : \(error.code), 메세지 : \(error.localizedDescription)")
+        }
+    }
+    
+    func addShakeSound() {
+        guard let soundAsset:NSDataAsset = NSDataAsset(name: "shake_sound") else {
+            print("음원 파일을 찾을 수 없습니다.")
+            return
+        }
+        
+        do {
+            try self.shakeSoundPlayer = AVAudioPlayer(data: soundAsset.data)
+            self.shakeSoundPlayer.delegate = self
+        } catch let error as NSError {
+            print("플레이어 초기화 실패")
+            print("코드 : \(error.code), 메세지 : \(error.localizedDescription)")
+        }
+    }
+
     
     // MARK: - IBAction methods
     @IBAction func dismissResultViewController(_ sender:UIButton) {
         dismiss(animated: false, completion: nil)
-    }
-    
-    @objc func loadMapViewController(_ sender:UIButton) {
-        print("Button Touched!")
     }
     
     // MARK: - Animation
@@ -172,33 +188,15 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
         
         CATransaction.setCompletionBlock({
             self.pocketImageView?.isHidden = true
-//            self.cloudImageView?.alpha = 1.0
             self.magicSoundPlayer.play()
             UIView.animate(withDuration: 2.0, animations: {
                 self.memoImage!.alpha = 1.0
-//                self.cloudImageView!.alpha = 0
             }) {
                 _ in
-//                self.cloudImageView?.isHidden = true
             }
         })
         self.pocketImageView?.layer.add(shakeGroup, forKey: "shakeIt")
         
         CATransaction.commit()
-    }
-    
-    func addAssetsSound() {
-        guard let soundAsset:NSDataAsset = NSDataAsset(name: "bbororong-Sound") else {
-            print("음원 파일을 찾을 수 없습니다.")
-            return
-        }
-        
-        do {
-            try self.magicSoundPlayer = AVAudioPlayer(data: soundAsset.data)
-            self.magicSoundPlayer.delegate = self
-        } catch let error as NSError {
-            print("플레이어 초기화 실패")
-            print("코드 : \(error.code), 메세지 : \(error.localizedDescription)")
-        }
     }
 }
