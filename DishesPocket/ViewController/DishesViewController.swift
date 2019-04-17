@@ -29,8 +29,8 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         addProperties()
         addAssetsSound()
 
-        var isPermitted = permission()
-        while isPermitted == false { isPermitted = permission()}
+//        var isPermitted = permission()
+//        while isPermitted == false { isPermitted = permission()}
         
         textField.delegate = self
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -47,6 +47,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     
     // MARK: - Custom methods
     func addProperties() {
+//        self.view.backgroundColor = UIColor.black;
         addImageView()
         addTextField()
         addDishesAddButton()
@@ -200,8 +201,9 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.autocorrectionType = .no
-        text.placeholder = "음식"
+        text.attributedPlaceholder = NSAttributedString(string: "음식", attributes: [NSAttributedString.Key.foregroundColor:UIColor.init(displayP3Red: 0, green: 0, blue: 0, alpha: 0.4)])
         text.textAlignment = NSTextAlignment.center
+        text.textColor = UIColor.black
         text.layer.borderWidth = 2
         text.layer.cornerRadius = 5
         text.layer.borderColor = UIColor.orange.cgColor
@@ -262,6 +264,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         label.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
         label.text = "0"
+        label.textColor = UIColor.black
         label.textAlignment = NSTextAlignment.right
         label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
         button.setImage(UIImage(named: "refresh"), for: UIControl.State.normal)
@@ -331,36 +334,36 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         }
     }
     
-    func permission() -> Bool {
-        var isGranted = true
-        
-        switch AVAudioSession.sharedInstance().recordPermission {
-        case AVAudioSession.RecordPermission.granted:
-            print("Permission granted")
-            return true
-        case AVAudioSession.RecordPermission.denied:
-            print("Permission denied")
-            AVAudioSession.sharedInstance().requestRecordPermission({
-                (granted) in
-                if granted {
-                    isGranted = true
-                } else {
-                    isGranted = false
-                }
-            })
-        case AVAudioSession.RecordPermission.undetermined:
-            print("Request permission here")
-            AVAudioSession.sharedInstance().requestRecordPermission({
-                (granted) in
-                if granted {
-                    isGranted = true
-                } else {
-                    isGranted = false
-                }
-            })
-        }
-        return isGranted
-    }
+//    func permission() -> Bool {
+//        var isGranted = true
+//
+//        switch AVAudioSession.sharedInstance().recordPermission {
+//        case AVAudioSession.RecordPermission.granted:
+//            print("Permission granted")
+//            return true
+//        case AVAudioSession.RecordPermission.denied:
+//            print("Permission denied")
+//            AVAudioSession.sharedInstance().requestRecordPermission({
+//                (granted) in
+//                if granted {
+//                    isGranted = true
+//                } else {
+//                    isGranted = false
+//                }
+//            })
+//        case AVAudioSession.RecordPermission.undetermined:
+//            print("Request permission here")
+//            AVAudioSession.sharedInstance().requestRecordPermission({
+//                (granted) in
+//                if granted {
+//                    isGranted = true
+//                } else {
+//                    isGranted = false
+//                }
+//            })
+//        }
+//        return isGranted
+//    }
 }
 
 extension UIImageView {

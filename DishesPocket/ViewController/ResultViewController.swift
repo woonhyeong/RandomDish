@@ -45,6 +45,7 @@ class ResultViewController : UIViewController, AVAudioPlayerDelegate{
     
     // MARK: - Custom Methods
     func addProperties() {
+//        self.view.backgroundColor = UIColor.black;
         addPocketImage()
         addResultImage()
         addCancelButton()
