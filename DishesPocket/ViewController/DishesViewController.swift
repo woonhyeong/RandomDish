@@ -19,9 +19,9 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     @IBOutlet weak var countLabel: UILabel!
     
     let dishesBrain = DishesBrain()
-    var isKeyBoardShown : Bool = false
     var addButtonPlayer : AVAudioPlayer!
-    
+    var isKeyBoardShown : Bool = false
+    var isStatusbarShown: Bool = false
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +57,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     }
     
     func addNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(statusBarFrameWillChange(notification:)), name: UIApplication.willChangeStatusBarFrameNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadOverlapView(notification:)), name: .loadOverlapView, object: nil)
@@ -78,6 +79,19 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
     }
     
     // MARK: - Notification methods
+    @objc func statusBarFrameWillChange(notification: Notification){
+        if isStatusbarShown {
+            self.view.frame.origin.y -= 20
+            self.isStatusbarShown = false
+        } else {
+            self.view.frame.origin.y += 20
+            self.isStatusbarShown = true
+        }
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
     @objc func loadOverlapView(notification: Notification) {
         // 중복된 음식을 알리는 alert를 사용자에게 띄운다
         guard let notificationUserInfo = notification.userInfo as? [String: String],
@@ -117,7 +131,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
             }
             
             UIView.animate(withDuration: 0.33, animations: { () -> Void in
-                if self.view.frame.origin.y == 0 {
+                if !self.isKeyBoardShown {
                     self.view.frame.origin.y -= keyboardSize.height
                 }
             }, completion:{ condition in
@@ -137,7 +151,7 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
             }
             
             UIView.animate(withDuration: 0.33, animations: { () -> Void in
-                if self.view.frame.origin.y != 0 {
+                if self.isKeyBoardShown {
                     self.view.frame.origin.y += keyboardSize.height
                 }
             }, completion:{ condition in
@@ -251,7 +265,6 @@ class DishesViewController: UIViewController, UITextFieldDelegate, AVAudioPlayer
         button.topAnchor.constraint(equalTo: dishesAddButton.bottomAnchor, constant: self.view.frame.height*0.025).isActive = true
         button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -self.view.frame.width*0.3).isActive = true
         button.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: self.view.frame.width*0.3).isActive = true
-        button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -self.view.frame.height*0.1).isActive = true
         button.heightAnchor.constraint(equalTo: dishesAddButton.heightAnchor, multiplier: 1).isActive = true
         
         mixButton = button
